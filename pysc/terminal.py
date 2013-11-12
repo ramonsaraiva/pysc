@@ -6,7 +6,11 @@ class Terminal(object):
 		self.router = {
 			'not_found': self.cmd_manager.commands['not_found'],
 			'exit': self.cmd_manager.commands['exit'],
+			'genres': self.cmd_manager.commands['genres'],
 			'play': self.cmd_manager.commands['play'],
+			'pause': self.cmd_manager.commands['pause'],
+			'resume': self.cmd_manager.commands['resume'],
+			'next': self.cmd_manager.commands['next'],
 		}
 
 	def welcome(self):

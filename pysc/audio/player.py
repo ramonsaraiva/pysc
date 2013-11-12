@@ -23,11 +23,11 @@ class StreamPlayer(object):
 		self.pipeline = gst.Pipeline()
 		self.pipeline.add(self.player)
 
+	def pause(self):
+		self.pipeline.set_state(gst.STATE_PAUSED)
+
 	def play(self):
 		self.pipeline.set_state(gst.STATE_PLAYING)
-
-	def stop(self):
-		self.pipeline.set_state(gst.STATE_PAUSED)
 
 	def change(self, uri):
 		self.new_pipeline()

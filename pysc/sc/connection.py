@@ -4,6 +4,11 @@ import settings
 class Client(object):
 	def __init__(self):
 		self.client = soundcloud.Client(client_id=settings.CLIENT_ID)
+		self.genres = [
+			'80s', 'abstract', 'acid-jazz', 'acoustic', 'acoustic-rock', 'african', 'alternative',
+			'ambient', 'americana', 'arabic', 'avantgarde', 'bachata', 'ballads', 'bhangra', 'blues',
+			'blues-rock', 'bossa-nova', 'breakbeats', 'chanson', 'chillout', 'chiptunes', 'choir', 'clasic-rock',
+		]
 		self.tracks = []
 		self.it = 0
 
