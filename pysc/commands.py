@@ -16,12 +16,12 @@ class Command(object):
 
 	def execute(self, args):
 		if not self.check_args(len(args)):
-			print self.name + ': wrong parameters. Usage: ' + self.usage
+			print(self.name + ': wrong parameters. Usage: ' + self.usage)
 			return
 
 class NotFoundCommand(Command):
 	def execute(self, args):
-		print 'command not found, try \'help\' to see available commands'
+		print('command not found, try \'help\' to see available commands')
 
 class ExitCommand(Command):
 	def __init__(self, manager):
@@ -50,7 +50,7 @@ class PlayCommand(Command):
 			self.manager.splayer.change(self.manager.client.current_stream_url())
 
 		self.manager.splayer.play()
-		print 'now playing \'' + self.manager.client.current_track().title + '\''
+		print('now playing \'' + self.manager.client.current_track().title + '\'')
 
 class CommandManager(object):
 	def __init__(self):

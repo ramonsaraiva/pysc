@@ -10,22 +10,22 @@ class Terminal(object):
 		}
 
 	def welcome(self):
-		print 'welcome to pysc! soundcloud in your terminal ~ powered by soundcloud'
-		print 'type \'genres\' to discover, or just \'help\' to see available commands'
+		print('welcome to pysc! soundcloud in your terminal ~ powered by soundcloud')
+		print('type \'genres\' to discover, or just \'help\' to see available commands')
 
 	def loop(self):
 		self.welcome()
 
 		while 1:
-			in_data = raw_input('-> ')
+			data = raw_input('>>> ')
 
-			params = in_data.split(' ')
+			data = data.split(' ')
 
-			if len(params) > 1:
-				command = params[0]
-				arguments = params[1:]
+			if len(data) > 1:
+				cmd = data[0]
+				args = data[1:]
 			else:
-				command = params[0]
-				arguments = ''
+				cmd = data[0]
+				args = ''
 
-			self.router.get(command, self.router['not_found']).execute(arguments)
+			self.router.get(cmd, self.router['not_found']).execute(args)
