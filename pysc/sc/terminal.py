@@ -1,12 +1,39 @@
 from audio.player import StreamPlayer
 from sc.connection import Client
+import sys
+
+class Command(object):
+	def __init__(self):
+		self.name = ''
+		self.args = 0
+		self.usage = ''
+
+	def check_args(self, argc):
+		if self.args < argc:
+			return False
+		return True
+
+	def execute(self, args):
+		if not self.check_args(len(args)):
+			print self.name + ': wrong parameters. Usage: ' + self.usage
+			return
+
+class ExitCommand(Command):
+	def __init__(self):
+		super(ExitCommand, self).__init__()
+		self.name = 'exit'
+
+	def execute(self, args):
+		super(ExitCommand, self).execute(args)
+		sys.exit()
 
 class Terminal(object):
 
 	def __init__(self):
 		self.client = Client()
 		self.splayer = None
-		self.commands = {}
+		self.commands = {'exit': ExitCommand()}
+		self.router = {'exit': self.commands['exit']}
 
 	def welcome(self):
 		print 'welcome to pysc! soundcloud in your terminal.'
@@ -14,6 +41,9 @@ class Terminal(object):
 
 	def not_found(self, data):
 		print 'sorry, command not found.'
+
+	def exit(self, data):
+		sys.exit()
 
 	def pause(self, data):
 		self.splayer.stop()
@@ -65,14 +95,4 @@ class Terminal(object):
 				command = params[0]
 				arguments = ''
 
-			self.commands.get(command, self.not_found)(arguments)
-
-	def load_commands(self):
-		self.commands = {
-			'genre': self.genre,
-			'add': self.add,
-			'pause': self.pause,
-			'resume': self.resume,
-			'next': self.next,
-			'prev': self.prev,
-		}
+			self.router.get(command, self.not_found).execute(arguments)
