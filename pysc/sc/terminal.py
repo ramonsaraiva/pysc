@@ -17,13 +17,20 @@ class Terminal(object):
 
 	def genre(self, data):
 		self.client.get_tracks(genre=data[0])
+		print len(self.client.tracks)
+
+		current_stream_url = self.client.current_stream_url()
 
 		if not self.splayer:
-			self.splayer = StreamPlayer(self.client.get_stream_url())
+			self.splayer = StreamPlayer(current_stream_url)
 		else:
-			self.splayer.change(self.client.get_stream_url())
+			self.splayer.change(current_stream_url)
 
 		self.splayer.play()
+
+	def add(self, data):
+		#not implemented
+		current_track = self.client.current_track()
 
 	def loop(self):
 		self.welcome()
@@ -45,4 +52,5 @@ class Terminal(object):
 	def load_commands(self):
 		self.commands = {
 			'genre': self.genre,
+			'add': self.add,
 		}
