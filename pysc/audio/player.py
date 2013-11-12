@@ -16,6 +16,13 @@ class StreamPlayer(object):
 
 		self.player.set_property('uri', channel)
 
+	def new_pipeline(self):
+		self.pipeline.set_state(gst.STATE_NULL)
+		self.pipeline = None
+
+		self.pipeline = gst.Pipeline()
+		self.pipeline.add(self.player)
+
 	def play(self):
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
@@ -23,4 +30,7 @@ class StreamPlayer(object):
 		self.pipeline.set_state(gst.STATE_PAUSED)
 
 	def change(self, uri):
+		self.new_pipeline()
+
 		self.player.set_property('uri', uri)
+		self.pipeline.set_state(gst.STATE_PLAYING)
