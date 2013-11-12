@@ -15,7 +15,13 @@ class Client(object):
 		if not self.tracks:
 			return None
 
-		return self.tracks[self.it]
+		return self.tracks[self.it % len(self.tracks)]
+
+	def next_track(self):
+		self.it += 1
+
+	def prev_track(self):
+		self.it += 1
 
 	def current_stream_url(self):
 		stream = self.client.get(self.current_track().stream_url, allow_redirects=False)

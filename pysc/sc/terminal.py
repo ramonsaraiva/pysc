@@ -15,16 +15,34 @@ class Terminal(object):
 	def not_found(self, data):
 		print 'sorry, command not found.'
 
+	def pause(self, data):
+		self.splayer.stop()
+		print 'player paused'
+
+	def resume(self, data):
+		self.splayer.play()
+		print 'player resumed'
+
+	def change(self):
+		self.splayer.change(self.client.current_stream_url())
+		print 'now playing \'' + self.client.current_track().title + '\''
+
+	def next(self, data):
+		self.client.next_track()
+		self.change()
+
+	def prev(self, data):
+		self.client.prev_track()
+		self.change()
+
 	def genre(self, data):
 		self.client.get_tracks(genre=data[0])
-		print len(self.client.tracks)
-
-		current_stream_url = self.client.current_stream_url()
 
 		if not self.splayer:
-			self.splayer = StreamPlayer(current_stream_url)
+			self.splayer = StreamPlayer(self.client.current_stream_url())
+			print 'now playing \'' + self.client.current_track().title + '\''
 		else:
-			self.splayer.change(current_stream_url)
+			self.change()
 
 		self.splayer.play()
 
@@ -53,4 +71,8 @@ class Terminal(object):
 		self.commands = {
 			'genre': self.genre,
 			'add': self.add,
+			'pause': self.pause,
+			'resume': self.resume,
+			'next': self.next,
+			'prev': self.prev,
 		}
