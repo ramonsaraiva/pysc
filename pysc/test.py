@@ -1,4 +1,4 @@
-from sc.terminal import Terminal
+from terminal import Terminal
 
 if __name__ == '__main__':
 	terminal = Terminal()
