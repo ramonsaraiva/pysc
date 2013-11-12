@@ -49,7 +49,9 @@ class PlayCommand(Command):
 		if not self.check_args(len(args)):
 			return
 
-		self.manager.client.get_tracks(genre=args[0])
+		if not self.manager.client.get_tracks(genre=args[0]):
+			print('sorry, we couldn\'t get any track.. maybe no internet connection?')
+			return
 
 		if not self.manager.splayer:
 			self.manager.splayer = StreamPlayer(self.manager.client.current_stream_url())
@@ -57,7 +59,7 @@ class PlayCommand(Command):
 			self.manager.splayer.change(self.manager.client.current_stream_url())
 
 		self.manager.splayer.play()
-		print('now playing \'' + self.manager.client.current_track().title + '\'')
+		print('now playing -> \'' + self.manager.client.current_track().title + '\'')
 
 class PauseCommand(Command):
 	def __init__(self, manager):
@@ -87,6 +89,16 @@ class NextCommand(Command):
 		self.manager.splayer.change(self.manager.client.current_stream_url())
 		print('now playing \'' + self.manager.client.current_track().title + '\'')
 
+class PrevCommand(Command):
+	def __init__(self, manager):
+		super(PrevCommand, self).__init__(manager)
+		self.args = 0
+
+	def execute(self, args):
+		self.manager.client.prev_track()
+		self.manager.splayer.change(self.manager.client.current_stream_url())
+		print('now playing \'' + self.manager.client.current_track().title + '\'')
+
 class CommandManager(object):
 	def __init__(self):
 		self.client = Client()
@@ -100,4 +112,5 @@ class CommandManager(object):
 			'pause': PauseCommand(self),
 			'resume': ResumeCommand(self),
 			'next': NextCommand(self),
+			'prev': PrevCommand(self),
 		}

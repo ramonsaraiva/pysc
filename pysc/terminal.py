@@ -11,6 +11,7 @@ class Terminal(object):
 			'pause': self.cmd_manager.commands['pause'],
 			'resume': self.cmd_manager.commands['resume'],
 			'next': self.cmd_manager.commands['next'],
+			'prev': self.cmd_manager.commands['prev'],
 		}
 
 	def welcome(self):
