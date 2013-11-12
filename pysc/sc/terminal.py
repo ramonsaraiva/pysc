@@ -3,7 +3,8 @@ from sc.connection import Client
 import sys
 
 class Command(object):
-	def __init__(self):
+	def __init__(self, manager):
+		self.manager = manager
 		self.name = ''
 		self.args = 0
 		self.usage = ''
@@ -19,21 +20,51 @@ class Command(object):
 			return
 
 class ExitCommand(Command):
-	def __init__(self):
-		super(ExitCommand, self).__init__()
+	def __init__(self, manager):
+		super(ExitCommand, self).__init__(manager)
 		self.name = 'exit'
 
 	def execute(self, args):
 		super(ExitCommand, self).execute(args)
 		sys.exit()
 
-class Terminal(object):
+class PlayCommand(Command):
+	def __init__(self, manager):
+		super(PlayCommand, self).__init__(manager)
+		self.name = 'play'
+		self.args = 1
+		self.usage = 'play <genre>'
 
+	def execute(self, args):
+		super(PlayCommand, self).execute(args)
+
+		self.manager.client.get_tracks(genre=args[0])
+
+		if not self.manager.splayer:
+			self.manager.splayer = StreamPlayer(self.manager.client.current_stream_url())
+			print 'now playing \'' + self.manager.client.current_track().title + '\''
+		else:
+			self.change()
+
+		self.manager.splayer.play()
+
+class CommandManager(object):
+	def __init__(self, client, splayer):
+		self.client = client
+		self.splayer = splayer
+
+		self.commands = {
+			'exit': ExitCommand(self),
+			'play': PlayCommand(self),
+		}
+
+class Terminal(object):
 	def __init__(self):
-		self.client = Client()
-		self.splayer = None
-		self.commands = {'exit': ExitCommand()}
-		self.router = {'exit': self.commands['exit']}
+		self.cmanager = CommandManager(Client(), None)
+		self.router = {
+			'exit': self.cmanager.commands['exit'],
+			'play': self.cmanager.commands['play']
+		}
 
 	def welcome(self):
 		print 'welcome to pysc! soundcloud in your terminal.'
