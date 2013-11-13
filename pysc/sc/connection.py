@@ -41,7 +41,7 @@ class Client(object):
 
 	def get_tracks(self, genre=None):
 		try:
-			self.tracks = self.client.get('/tracks', genres=genre, streamable='true', order='created_at', limit=settings.TRACKS_PER_PAG, offset=self.offset)
+			self.tracks = self.client.get('/tracks', genres=genre, order='created_at', limit=settings.TRACKS_PER_PAG, offset=self.offset)
 			self.genre = genre
 			return True
 		except:
@@ -67,10 +67,14 @@ class Client(object):
 			self.get_tracks(self.genre)
 
 	def current_stream_url(self):
+		while not self.current_track().streamable:
+			self.next_track()
+
 		try:
 			stream = self.client.get(self.current_track().stream_url, allow_redirects=False)
 			location = stream.location
 		except:
 			self.next_track()
 			location = self.current_stream_url()
+
 		return location
