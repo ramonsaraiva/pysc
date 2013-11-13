@@ -5,14 +5,15 @@ import pygst
 pygst.require('0.10')
 import gst
 
-import time
+from threading import Thread
 
-class StreamPlayer(object):
-	def __init__(self, manager, channel):
+class StreamPlayer(Thread):
+	def __init__(self, manager):
+		Thread.__init__(self)
+
 		self.manager = manager
 
 		self.player = gst.element_factory_make('playbin2', 'theplayer')
-		self.player.set_property('uri', channel)
 
 		self.pipeline = None
 		self.build_pipeline()
@@ -23,7 +24,12 @@ class StreamPlayer(object):
 		self.connect_signals()
 
 		self.mainloop = gobject.MainLoop()
+
+	def run(self):
 		self.mainloop.run()
+
+	def quit_mainloop(self):
+		self.mainloop.quit()
 
 	def build_pipeline(self):
 		if self.pipeline:
@@ -36,8 +42,7 @@ class StreamPlayer(object):
 	def connect_signals(self):
 		self.bus = self.pipeline.get_bus()
 		self.bus.add_signal_watch()
-
-		self.bus.connect('message::eos', self.manager.eos_handler)
+		self.bus.connect('message::eos', self.manager.gst_message_handler)
 
 	def pause(self):
 		self.pipeline.set_state(gst.STATE_PAUSED)
@@ -46,6 +51,6 @@ class StreamPlayer(object):
 		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def change(self, uri):
-		self.build_pipeline()
+		self.pipeline.set_state(gst.STATE_NULL)
 		self.player.set_property('uri', uri)
 		self.play()

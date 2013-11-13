@@ -1,6 +1,8 @@
 from audio.player import StreamPlayer
 from sc.connection import Client
 import sys
+import gst
+from threading import Thread
 
 class Command(object):
 	def __init__(self, manager):
@@ -21,6 +23,8 @@ class NotFoundCommand(Command):
 
 class ExitCommand(Command):
 	def execute(self, args):
+		self.manager.splayer.quit_mainloop()
+		self.manager.splayer.join()
 		sys.exit()
 
 class GenresCommand(Command):
@@ -52,14 +56,7 @@ class PlayCommand(Command):
 			return
 
 		self.manager.client.clean_parameters()
-
-		if not self.manager.splayer:
-			self.manager.splayer = StreamPlayer(self.manager, self.manager.client.current_stream_url())
-		else:
-			self.manager.splayer.change(self.manager.client.current_stream_url())
-
-		self.manager.splayer.play()
-		print("now playing '" + self.manager.client.current_track().title + "'")
+		self.manager.update_player()
 
 class PauseCommand(Command):
 	def execute(self, args):
@@ -74,19 +71,18 @@ class ResumeCommand(Command):
 class NextCommand(Command):
 	def execute(self, args):
 		self.manager.client.next_track()
-		self.manager.splayer.change(self.manager.client.current_stream_url())
-		print("now playing '" + self.manager.client.current_track().title + "'")
+		self.manager.update_player()
 
 class PrevCommand(Command):
 	def execute(self, args):
 		self.manager.client.prev_track()
-		self.manager.splayer.change(self.manager.client.current_stream_url())
-		print('now playing \'' + self.manager.client.current_track().title + '\'')
+		self.manager.update_player()
 
 class CommandManager(object):
 	def __init__(self):
 		self.client = Client()
-		self.splayer = None
+		self.splayer = StreamPlayer(self)
+		self.splayer.start()
 
 		self.commands = {
 			'not_found': NotFoundCommand(None),
@@ -99,6 +95,10 @@ class CommandManager(object):
 			'prev': PrevCommand(self),
 		}
 
-	def eos_handler(self, bus, message):
-		print 'eos'
-		commands['next'].execute('')
+	def update_player(self):
+		self.splayer.change(self.client.current_stream_url())
+		print('now playing \'' + self.client.current_track().title + '\'')
+
+	def gst_message_handler(self, bus, message):
+		if message.type == gst.MESSAGE_EOS:
+			self.commands['next'].execute('')
