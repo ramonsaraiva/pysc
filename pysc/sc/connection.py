@@ -29,12 +29,20 @@ class Client(object):
 		]
 
 		self.tracks = []
-		self.it = 0
+		self.pos = 0
+		self.coffset = 0
+		self.offset = 0
+		self.genre = ''
+
+	def clean_parameters(self):
+		self.pos = 0
+		self.coffset = 0
+		self.offset = 0
 
 	def get_tracks(self, genre=None):
 		try:
-			self.tracks = self.client.get('/tracks', genres=genre, streamable=True, limit=settings.TRACKS_PER_PAG)
-			self.it = 0
+			self.tracks = self.client.get('/tracks', genres=genre, streamable='true', order='created_at', limit=settings.TRACKS_PER_PAG, offset=self.offset)
+			self.genre = genre
 			return True
 		except:
 			return False
@@ -42,13 +50,17 @@ class Client(object):
 	def current_track(self):
 		if not self.tracks:
 			return None
-		return self.tracks[self.it % len(self.tracks)]
+		return self.tracks[self.pos % len(self.tracks)]
 
 	def next_track(self):
-		self.it += 1
+		self.pos += 1
+		if (self.pos / settings.TRACKS_PER_PAG) > self.coffset:
+			self.coffset += 1
+			self.offset += settings.TRACKS_PER_PAG
+			self.get_tracks(self.genre)
 
 	def prev_track(self):
-		self.it += 1
+		self.pos -= 1
 
 	def current_stream_url(self):
 		try:

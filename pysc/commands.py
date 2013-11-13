@@ -17,7 +17,7 @@ class Command(object):
 
 class NotFoundCommand(Command):
 	def execute(self, args):
-		print('command not found, try \'help\' to see available commands')
+		print("command not found, try 'help' to see available commands")
 
 class ExitCommand(Command):
 	def __init__(self, manager):
@@ -52,8 +52,10 @@ class PlayCommand(Command):
 			return
 
 		if not self.manager.client.get_tracks(genre=genre):
-			print('sorry, we couldn\'t get any track.. maybe no internet connection?')
+			print("sorry, we couldn't get any track.. maybe no internet connection?")
 			return
+
+		self.manager.client.clean_parameters()
 
 		if not self.manager.splayer:
 			self.manager.splayer = StreamPlayer(self.manager, self.manager.client.current_stream_url())
@@ -61,7 +63,7 @@ class PlayCommand(Command):
 			self.manager.splayer.change(self.manager.client.current_stream_url())
 
 		self.manager.splayer.play()
-		print('now playing -> \'' + self.manager.client.current_track().title + '\'')
+		print("now playing '" + self.manager.client.current_track().title + "'")
 
 class PauseCommand(Command):
 	def __init__(self, manager):
@@ -89,7 +91,7 @@ class NextCommand(Command):
 	def execute(self, args):
 		self.manager.client.next_track()
 		self.manager.splayer.change(self.manager.client.current_stream_url())
-		print('now playing \'' + self.manager.client.current_track().title + '\'')
+		print("now playing '" + self.manager.client.current_track().title + "'")
 
 class PrevCommand(Command):
 	def __init__(self, manager):
