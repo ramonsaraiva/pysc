@@ -9,6 +9,7 @@ class Client(object):
 			'ambient', 'americana', 'arabic', 'avantgarde', 'bachata', 'ballads', 'bhangra', 'blues',
 			'blues-rock', 'bossa-nova', 'breakbeats', 'chanson', 'chillout', 'chiptunes', 'choir', 'classic-rock',
 		]
+
 		self.tracks = []
 		self.it = 0
 

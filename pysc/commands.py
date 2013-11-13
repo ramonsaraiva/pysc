@@ -31,7 +31,7 @@ class GenresCommand(Command):
 		super(GenresCommand, self).__init__(manager)
 
 	def execute(self, args):
-		print(' '.join( self.manager.client.genres))
+		print('  '.join( self.manager.client.genres_code))
 
 class PlayCommand(Command):
 	def __init__(self, manager):
@@ -40,21 +40,18 @@ class PlayCommand(Command):
 		self.args = 1
 		self.usage = 'play <genre>'
 
-	def check_args(self, argc):
-		if not super(PlayCommand, self).check_args(argc):
-			return False
-		return True
-
 	def execute(self, args):
 		if not self.check_args(len(args)):
 			return
 
-		if not self.manager.client.get_tracks(genre=args[0]):
+		genre = ' '.join(args)
+
+		if not self.manager.client.get_tracks(genre=genre):
 			print('sorry, we couldn\'t get any track.. maybe no internet connection?')
 			return
 
 		if not self.manager.splayer:
-			self.manager.splayer = StreamPlayer(self.manager.client.current_stream_url())
+			self.manager.splayer = StreamPlayer(self.manager, self.manager.client.current_stream_url())
 		else:
 			self.manager.splayer.change(self.manager.client.current_stream_url())
 
@@ -114,3 +111,9 @@ class CommandManager(object):
 			'next': NextCommand(self),
 			'prev': PrevCommand(self),
 		}
+
+	def message_handler(self, bus, message):
+		print 'message received!!!!'
+		if message.type == gst.MESSAGE_EOS:
+			print 'it is a END OF STREAM!!!!!!'
+			commands['next'].execute('')
