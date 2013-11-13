@@ -5,39 +5,39 @@ pysc
 **pysc** is a command-line repl interface to Soundcloud.
 
 Installation
-	------------
-	To install **pysc**, simply:  
+------------
+To install **pysc**, simply:  
 
-		pip install pysc
+    pip install pysc
 
-	Or if you're not hip to the pip:
+Or if you're not hip to the pip:
 
-		easy_install pysc
+    easy_install pysc
 
-	Remember that you need to be connected to internet, unless you have a playlist of downloaded songs.
+Remember that you need to be connected to internet, unless you have a playlist of downloaded songs.
 
-	Features
-	--------
+Features
+--------
 
-	* **Music**
-	* List of all music genres available
-	* Simple navigation using *next* and *prev*
-	* Sound player *pause*/*resume* options
-	* Download of Soundcloud downloadable tracks
+* **Music**
+  * List of all music genres available
+  * Simple navigation using *next* and *prev*
+  * Sound player *pause*/*resume* options
+  * Download of Soundcloud downloadable tracks
 
 
-	* **Playlists**
-	* Playlists management
+* **Playlists**
+  * Playlists management
 
-	Usage
-	-----
+Usage
+-----
 
-	Firstly, let you know about the *settings.py* file. Only two constants are setted up there, they are:  
+Firstly, let you know about the *settings.py* file. Only two constants are setted up there, they are:  
 
-		CLIENT_ID = '43b1906ada38f27c8e864c07de04b7b7'
-		TRACKS_PER_PAG = 50
+    CLIENT_ID = '43b1906ada38f27c8e864c07de04b7b7'
+    TRACKS_PER_PAG = 50
 
-CLIENT\_ID is just the **pysc** app id inside Soundcloud, you can change it to another app id, but it is pointless. And care if you change it, the id *must be* recognized by Sondcloud, or **pysc** won't be able to use its *api*.  
+CLIENT\_ID is just the **pysc** app id inside Soundcloud, you can change it to another app id, but it's pointless. And care if you change it, the id *must be* recognized by Sondcloud, or **pysc** won't be able to use its *api*.  
 
 TRACKS\_PER\_PAG is the number of tracks that will be load in each request. You can set whatever you want in there, **pysc** will deal with pagination for you, just don't set it to **0**.  
 It just means telling **pysc** *~create a new request to Soundcloud in every **X** tracks listened~*.
