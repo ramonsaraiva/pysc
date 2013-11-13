@@ -45,8 +45,11 @@ class PlayCommand(Command):
 		if not self.check_args(len(args)):
 			return
 
-		genre = ' '.join(args)
-		print genre
+		genre = ' '.join(args).lower()
+
+		if not genre in map(str.lower, self.manager.client.genres):
+			print ('unknown genre, maybe mispelled?')
+			return
 
 		if not self.manager.client.get_tracks(genre=genre):
 			print('sorry, we couldn\'t get any track.. maybe no internet connection?')

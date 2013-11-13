@@ -51,5 +51,10 @@ class Client(object):
 		self.it += 1
 
 	def current_stream_url(self):
-		stream = self.client.get(self.current_track().stream_url, allow_redirects=False)
-		return stream.location
+		try:
+			stream = self.client.get(self.current_track().stream_url, allow_redirects=False)
+			location = stream.location
+		except:
+			self.next_track()
+			location = self.current_stream_url()
+		return location
