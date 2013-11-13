@@ -61,6 +61,10 @@ class Client(object):
 
 	def prev_track(self):
 		self.pos -= 1
+		if (self.pos / settings.TRACKS_PER_PAG) <= self.coffset:
+			self.coffset -= 1
+			self.offset -= settings.TRACKS_PER_PAG
+			self.get_tracks(self.genre)
 
 	def current_stream_url(self):
 		try:
