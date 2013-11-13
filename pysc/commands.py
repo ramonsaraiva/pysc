@@ -31,7 +31,8 @@ class GenresCommand(Command):
 		super(GenresCommand, self).__init__(manager)
 
 	def execute(self, args):
-		print('  '.join( self.manager.client.genres_code))
+		print('\n' + ' ~ '.join( self.manager.client.genres))
+		print('\n* use \'play\' command to listen, example: \'play chillout\'')
 
 class PlayCommand(Command):
 	def __init__(self, manager):
@@ -45,6 +46,7 @@ class PlayCommand(Command):
 			return
 
 		genre = ' '.join(args)
+		print genre
 
 		if not self.manager.client.get_tracks(genre=genre):
 			print('sorry, we couldn\'t get any track.. maybe no internet connection?')
