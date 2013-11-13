@@ -99,8 +99,6 @@ class CommandManager(object):
 			'prev': PrevCommand(self),
 		}
 
-	def message_handler(self, bus, message):
-		print 'message received!!!!'
-		if message.type == gst.MESSAGE_EOS:
-			print 'it is a END OF STREAM!!!!!!'
-			commands['next'].execute('')
+	def eos_handler(self, bus, message):
+		print 'eos'
+		commands['next'].execute('')

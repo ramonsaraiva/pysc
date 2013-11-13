@@ -1,3 +1,6 @@
+import gobject
+gobject.threads_init()
+
 import pygst
 pygst.require('0.10')
 import gst
@@ -19,6 +22,9 @@ class StreamPlayer(object):
 
 		self.connect_signals()
 
+		self.mainloop = gobject.MainLoop()
+		self.mainloop.run()
+
 	def build_pipeline(self):
 		if self.pipeline:
 			self.pipeline.set_state(gst.STATE_NULL)
@@ -28,9 +34,10 @@ class StreamPlayer(object):
 		self.pipeline.add(self.player)
 
 	def connect_signals(self):
-		bus = self.player.get_bus()
-		bus.add_signal_watch()
-		bus.connect('message', self.manager.message_handler)
+		self.bus = self.pipeline.get_bus()
+		self.bus.add_signal_watch()
+
+		self.bus.connect('message::eos', self.manager.eos_handler)
 
 	def pause(self):
 		self.pipeline.set_state(gst.STATE_PAUSED)
