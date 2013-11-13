@@ -20,16 +20,10 @@ class NotFoundCommand(Command):
 		print("command not found, try 'help' to see available commands")
 
 class ExitCommand(Command):
-	def __init__(self, manager):
-		super(ExitCommand, self).__init__(manager)
-
 	def execute(self, args):
 		sys.exit()
 
 class GenresCommand(Command):
-	def __init__(self, manager):
-		super(GenresCommand, self).__init__(manager)
-
 	def execute(self, args):
 		print('\n' + ' ~ '.join( self.manager.client.genres))
 		print('\n* use \'play\' command to listen, example: \'play chillout\'')
@@ -66,38 +60,22 @@ class PlayCommand(Command):
 		print("now playing '" + self.manager.client.current_track().title + "'")
 
 class PauseCommand(Command):
-	def __init__(self, manager):
-		super(PauseCommand, self).__init__(manager)
-		self.args = 0
-
 	def execute(self, args):
 		self.manager.splayer.pause()
 		print('player paused')
 
 class ResumeCommand(Command):
-	def __init__(self, manager):
-		super(ResumeCommand, self).__init__(manager)
-		self.args = 0
-
 	def execute(self, args):
 		self.manager.splayer.play()
 		print('player resumed')
 
 class NextCommand(Command):
-	def __init__(self, manager):
-		super(NextCommand, self).__init__(manager)
-		self.args = 0
-
 	def execute(self, args):
 		self.manager.client.next_track()
 		self.manager.splayer.change(self.manager.client.current_stream_url())
 		print("now playing '" + self.manager.client.current_track().title + "'")
 
 class PrevCommand(Command):
-	def __init__(self, manager):
-		super(PrevCommand, self).__init__(manager)
-		self.args = 0
-
 	def execute(self, args):
 		self.manager.client.prev_track()
 		self.manager.splayer.change(self.manager.client.current_stream_url())
