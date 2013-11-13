@@ -45,6 +45,8 @@ class PlayCommand(Command):
 			print ('unknown genre, maybe mispelled?')
 			return
 
+		print('getting tracks..')
+
 		if not self.manager.client.get_tracks(genre=genre):
 			print("sorry, we couldn't get any track.. maybe no internet connection?")
 			return
