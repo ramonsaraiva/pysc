@@ -87,6 +87,16 @@ class PrevCommand(Command):
 		self.manager.client.prev_track()
 		self.manager.update_player()
 
+class NextPageCommand(Command):
+	def execute(self, args):
+		self.manager.client.next_page()
+		self.manager.update_player()
+
+class PrevPageCommand(Command):
+	def execute(self, args):
+		self.manager.client.prev_page()
+		self.manager.update_player()
+
 class LoopCommand(Command):
 	def execute(self, args):
 		print('looping track!')
@@ -184,6 +194,8 @@ class CommandManager(object):
 			'resume': ResumeCommand(self),
 			'next': NextCommand(self),
 			'prev': PrevCommand(self),
+			'nextpage': NextPageCommand(self),
+			'prevpage': PrevPageCommand(self),
 			'loop': LoopCommand(self),
 			'unloop': UnloopCommand(self),
 			'seek': SimpleSeekCommand(self),

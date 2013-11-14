@@ -53,6 +53,18 @@ class Client(object):
 			return None
 		return self.tracks[self.pos % len(self.tracks)]
 
+	def next_page(self):
+		self.pos = 0
+		self.coffset += 1
+		self.offset += settings.TRACKS_PER_PAG
+		self.get_tracks(self.genre)
+
+	def prev_page(self):
+		self.pos = 0
+		self.coffset -= 1
+		self.offset -= settings.TRACK_PER_PAG
+		self.get_tracks(self.genre)
+
 	def next_track(self):
 		if self.looping:
 			self.looping = False
@@ -70,7 +82,7 @@ class Client(object):
 		self.pos -= 1
 		if (self.pos / settings.TRACKS_PER_PAG) <= self.coffset:
 			self.coffset -= 1
-			self.offset -= settings.TRACKS_PER_PAG
+			self.offset -= settings.TRACK_PER_PAG
 			self.get_tracks(self.genre)
 
 	def current_stream_url(self):
