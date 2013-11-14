@@ -14,6 +14,7 @@ class StreamPlayer(Thread):
 		self.manager = manager
 
 		self.player = gst.element_factory_make('playbin2', 'theplayer')
+		self.src = gst.element_factory_make('audiotestsrc', 'src')
 
 		self.pipeline = None
 		self.build_pipeline()
@@ -21,8 +22,15 @@ class StreamPlayer(Thread):
 		self.audiosink = gst.element_factory_make('autoaudiosink', 'audiosink')
 		self.audiosink.set_property('async-handling', True)
 
-		self.connect_signals()
+		self.control = gst.Controller(self.src, 'volume')
+		self.control.set_interpolation_mode('volume', gst.INTERPOLATE_LINEAR)
 
+		self.control.set('volume', 0, 0.0)
+		self.control.set('volume', 2 * gst.SECOND, 1.0)
+		self.control.set('volume', 4 * gst.SECOND, 0.0)
+		self.control.set('volume', 6 * gst.SECOND, 1.0)
+
+		self.connect_signals()
 		self.mainloop = gobject.MainLoop()
 
 	def run(self):
