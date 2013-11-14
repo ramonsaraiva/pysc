@@ -2,6 +2,7 @@ from audio.player import StreamPlayer
 from sc.connection import Client
 import sys
 import gst
+import os
 from threading import Thread
 
 class Command(object):
@@ -26,6 +27,10 @@ class ExitCommand(Command):
 		self.manager.splayer.quit_mainloop()
 		self.manager.splayer.join()
 		sys.exit()
+
+class ClearCommand(Command):
+	def execute(self, args):
+		os.system('cls' if os.name=='nt' else 'clear')
 
 class GenresCommand(Command):
 	def execute(self, args):
@@ -78,6 +83,16 @@ class PrevCommand(Command):
 		self.manager.client.prev_track()
 		self.manager.update_player()
 
+class LoopCommand(Command):
+	def execute(self, args):
+		print('looping track!')
+		self.manager.client.looping = True
+
+class UnloopCommand(Command):
+	def execute(self, args):
+		print('no more loop!')
+		self.manager.client.looping = False
+
 class CommandManager(object):
 	def __init__(self):
 		self.client = Client()
@@ -87,18 +102,28 @@ class CommandManager(object):
 		self.commands = {
 			'not_found': NotFoundCommand(None),
 			'exit': ExitCommand(self),
+			'clear': ClearCommand(None),
 			'genres': GenresCommand(self),
 			'play': PlayCommand(self),
 			'pause': PauseCommand(self),
 			'resume': ResumeCommand(self),
 			'next': NextCommand(self),
 			'prev': PrevCommand(self),
+			'loop': LoopCommand(self),
+			'unloop': UnloopCommand(self),
+			#'forwards': ForwardsCommand(self),
+			#'backwards': BackwardsCommand(self),
 		}
 
 	def update_player(self):
 		self.splayer.change(self.client.current_stream_url())
 		print('now playing \'' + self.client.current_track().title + '\'')
 
+		if self.client.looping:
+			print("looping track, use 'unloop' to disable looping")
+
 	def gst_message_handler(self, bus, message):
 		if message.type == gst.MESSAGE_EOS:
-			self.commands['next'].execute('')
+			if not self.client.looping:
+				self.client.next_track()
+			self.update_player()

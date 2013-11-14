@@ -40,7 +40,7 @@ Firstly, let you know about the *settings.py* file. Only two constants are sette
 CLIENT\_ID is just the **pysc** app id inside Soundcloud, you can change it to another app id, but it's pointless. And care if you change it, the id *must be* recognized by Sondcloud, or **pysc** won't be able to use its *api*.  
 
 TRACKS\_PER\_PAG is the number of tracks that will be load in each request. You can set whatever you want in there, **pysc** will deal with pagination for you, just don't set it to **0**.  
-It just means telling **pysc** *~create a new request to Soundcloud in every **X** tracks listened~*.
+It just means telling **pysc** *~create a new request to Soundcloud in every X tracks listened~*.
 
 To run the **pysc** repl, just type `pysc`
 

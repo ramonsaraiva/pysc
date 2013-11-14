@@ -3,16 +3,6 @@ from commands import CommandManager
 class Terminal(object):
 	def __init__(self):
 		self.cmd_manager = CommandManager()
-		self.router = {
-			'not_found': self.cmd_manager.commands['not_found'],
-			'exit': self.cmd_manager.commands['exit'],
-			'genres': self.cmd_manager.commands['genres'],
-			'play': self.cmd_manager.commands['play'],
-			'pause': self.cmd_manager.commands['pause'],
-			'resume': self.cmd_manager.commands['resume'],
-			'next': self.cmd_manager.commands['next'],
-			'prev': self.cmd_manager.commands['prev'],
-		}
 
 	def welcome(self):
 		print('welcome to pysc! soundcloud in your terminal ~ powered by soundcloud')
@@ -33,4 +23,4 @@ class Terminal(object):
 				cmd = data[0]
 				args = ''
 
-			self.router.get(cmd, self.router['not_found']).execute(args)
+			self.cmd_manager.commands.get(cmd, self.cmd_manager.commands['not_found']).execute(args)

@@ -33,6 +33,7 @@ class Client(object):
 		self.coffset = 0
 		self.offset = 0
 		self.genre = ''
+		self.looping = False
 
 	def clean_parameters(self):
 		self.pos = 0
@@ -53,6 +54,9 @@ class Client(object):
 		return self.tracks[self.pos % len(self.tracks)]
 
 	def next_track(self):
+		if self.looping:
+			self.looping = False
+
 		self.pos += 1
 		if (self.pos / settings.TRACKS_PER_PAG) > self.coffset:
 			self.coffset += 1
@@ -60,6 +64,9 @@ class Client(object):
 			self.get_tracks(self.genre)
 
 	def prev_track(self):
+		if self.looping:
+			self.looping = False
+
 		self.pos -= 1
 		if (self.pos / settings.TRACKS_PER_PAG) <= self.coffset:
 			self.coffset -= 1
