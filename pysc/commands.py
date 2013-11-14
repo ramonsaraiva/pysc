@@ -12,10 +12,13 @@ class Command(object):
 		self.args = 0
 		self.usage = ''
 
+	def error(self, msg):
+		print (self.name + ': ' + msg + ' Usage: ' + self.name + ' ' + self.usage)
+
 	def check_args(self, argc):
 		if argc >= self.args:
 			return True
-		print(self.name + ': wrong parameters. Usage: ' + self.usage)
+		self.error('wrong parameters.')
 		return False
 
 class NotFoundCommand(Command):
@@ -40,9 +43,10 @@ class GenresCommand(Command):
 class PlayCommand(Command):
 	def __init__(self, manager):
 		super(PlayCommand, self).__init__(manager)
+
 		self.name = 'play'
 		self.args = 1
-		self.usage = 'play <genre>'
+		self.usage = '<genre>'
 
 	def execute(self, args):
 		if not self.check_args(len(args)):
@@ -93,6 +97,77 @@ class UnloopCommand(Command):
 		print('no more loop!')
 		self.manager.client.looping = False
 
+class SeekCommand(Command):
+	def __init__(self, manager):
+		super(SeekCommand, self).__init__(manager)
+		self.args = 1
+		self.usage = '<seconds>'
+
+	def check_args(self, argc, args):
+		if not super(SeekCommand, self).check_args(argc):
+			return False
+
+		try:
+			secs = int(args[0])
+		except:
+			self.error('seconds must be an integer')
+			return False
+
+		if secs <= 0:
+			self.error('seconds must be bigger than 0.')
+			return False
+
+		return True
+
+class SimpleSeekCommand(SeekCommand):
+	def __init__(self, manager):
+		super(SimpleSeekCommand, self).__init__(manager)
+		self.name = 'seek'
+
+	def execute(self, args):
+		if not self.check_args(len(args), args):
+			return
+
+		secs = int(args[0]) * 1000000000
+
+		if not self.manager.splayer.seek(secs, False):
+			self.error('unable to seek, number too big.')
+			return
+		print('seeked to ' + args[0] + ' seconds')
+
+
+class ForwardsCommand(SeekCommand):
+	def __init__(self, manager):
+		super(ForwardsCommand, self).__init__(manager)
+		self.name = 'forwards'
+
+	def execute(self, args):
+		if not self.check_args(len(args), args):
+			return
+
+		secs = int(args[0]) * 1000000000
+
+		if not self.manager.splayer.seek(secs, True):
+			self.error('unable to go forwards, number too big.')
+			return
+		print('forwarded ' + args[0] + ' seconds')
+
+class BackwardsCommand(SeekCommand):
+	def __init__(self, manager):
+		super(BackwardsCommand, self).__init__(manager)
+		self.name = 'backwards'
+
+	def execute(self, args):
+		if not self.check_args(len(args), args):
+			return
+
+		secs = int(args[0]) * 1000000000
+
+		if not self.manager.splayer.seek(-secs, True):
+			self.error('unable to go backwards, number too big.')
+			return
+		print('backwarded ' + args[0] + ' seconds')
+
 class CommandManager(object):
 	def __init__(self):
 		self.client = Client()
@@ -111,8 +186,9 @@ class CommandManager(object):
 			'prev': PrevCommand(self),
 			'loop': LoopCommand(self),
 			'unloop': UnloopCommand(self),
-			#'forwards': ForwardsCommand(self),
-			#'backwards': BackwardsCommand(self),
+			'seek': SimpleSeekCommand(self),
+			'forwards': ForwardsCommand(self),
+			'backwards': BackwardsCommand(self),
 		}
 
 	def update_player(self):

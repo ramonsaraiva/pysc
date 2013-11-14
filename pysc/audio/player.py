@@ -62,3 +62,33 @@ class StreamPlayer(Thread):
 		self.pipeline.set_state(gst.STATE_NULL)
 		self.player.set_property('uri', uri)
 		self.play()
+
+	def query_pos(self):
+		try:
+			pos, format = self.player.query_position(gst.FORMAT_TIME)
+		except:
+			pos = gst.CLOCK_TIME_NONE
+
+		try:
+			dur, format = self.player.query_duration(gst.FORMAT_TIME)
+		except:
+			dur = gst.CLOCK_TIME_NONE
+
+		return (pos, dur)
+
+	def seek(self, location, bypos):
+		location = (location + self.query_pos()[0] if bypos else location)
+
+		try:
+			event = gst.event_new_seek(1.0, gst.FORMAT_TIME,
+				gst.SEEK_FLAG_FLUSH,
+				gst.SEEK_TYPE_SET, location,
+				gst.SEEK_TYPE_NONE, 0)
+		except:
+			return False
+
+		res = self.player.send_event(event)
+		if res:
+			self.player.set_new_stream_time(0L)
+			return True
+		return False

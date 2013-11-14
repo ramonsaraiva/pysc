@@ -12,7 +12,7 @@ class Terminal(object):
 		self.welcome()
 
 		while 1:
-			data = raw_input('>>> ')
+			data = raw_input()
 
 			data = data.split(' ')
 
