@@ -82,7 +82,7 @@ Commands
   * **loop, unloop**  
     *Loop or unloop current track*
   * **seek &lt;seconds&gt;**  
-    *Seek for a track time
+    *Seek for a track time*
   * **forwards &lt;seconds&gt;**  
     *Go forwards*
   * **backwards &lt;seconds&gt;**  
