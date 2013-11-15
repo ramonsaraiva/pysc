@@ -77,11 +77,11 @@ Commands
     *Pause or resume the sound player*
   * **prev, next**  
     *Go prev or next track*
-  * **prevpage, nextpage**
+  * **prevpage, nextpage**  
     *Go prev or next page of tracks*
   * **loop, unloop**  
     *Loop or unloop current track*
-  * **seek &lt;seconds&gt;**
+  * **seek &lt;seconds&gt;**  
     *Seek for a track time
   * **forwards &lt;seconds&gt;**  
     *Go forwards*
