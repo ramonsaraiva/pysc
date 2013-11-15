@@ -77,12 +77,16 @@ Commands
     *Pause or resume the sound player*
   * **prev, next**  
     *Go prev or next track*
+  * **prevpage, nextpage**
+    *Go prev or next page of tracks*
   * **loop, unloop**  
     *Loop or unloop current track*
-  * **forwards &lt;miliseconds&gt;**  
-    *Go forwards, for example: 5000 for 5 sec*
-  * **backwards &lt;miliseconds&gt;**  
-    *Go backwards, for example: 5000 for 5 sec*
+  * **seek &lt;seconds&gt;**
+    *Seek for a track time
+  * **forwards &lt;seconds&gt;**  
+    *Go forwards*
+  * **backwards &lt;seconds&gt;**  
+    *Go backwards*
   * **volume &lt;number&gt;**  
     *Manage volume level*
 
